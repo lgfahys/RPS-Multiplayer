@@ -17,8 +17,35 @@
 </head>
 
 <body>
-
-
-
-
+    <div class="row header">
+        <div class="col 9">
+            <h1>Rock Paper Scissors</h1>
+        </div>
+        <div class="col 3" id="user-name">
+            </div>
+    </div>
+    <div class="container form-container">
+        <h3>Enter your name to start the game</h3>
+        <form role="form">
+            <div class="form-group row">
+                <label for="name-input">Name:</label>
+                <input class="form-control" id="name-input" type="text">
+            </div>
+            <button class="btn btn-default" id="add-name" type="submit">Submit</button>
+        </form>
+    </div>
+    <div class="container game-container">
+        <div class="row">
+            <div class="col 12" id="user-choices">
+                <!-- user choice buttons go here -->
+            </div>
+        </div>
+        <div class="row game-board">
+            <div class="col 6" id="user-one-choice">
+            </div>
+            <div class="col 6" id="user-two-choice">
+                userTwo choice goes here
+            </div>
+        </div>
+    </div>
 </body>
