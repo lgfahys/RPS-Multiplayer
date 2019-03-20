@@ -35,16 +35,20 @@ $(document).ready(function () {
 
     $("#add-name").on("click", function (event) {
         event.preventDefault();
-
+        //making sure a blank name is not input
+        if ($("#name-input").val() !== "") {
         //grabbing what the user input as their name
         name = $("#name-input").val().trim();
         $("#user-name").text("Hello, " + name);
         //set name value in database
-        database.ref().set({
+        database.ref().push({
             name: name,
         });
-
+        } else {
+            alert ("Please input your name to begin");
+        }
     });
+
 
     database.ref().on("value", function (snapshot) {
         console.log(snapshot.val().name);
@@ -72,6 +76,9 @@ $(document).ready(function () {
         var userChoice = $(this).attr("data-name");
         console.log(userChoice);
         $("#user-one-choice").text("You chose: " + userChoice);
+        database.ref().ref({
+            userChoice: userChoice,
+        });
     }
 
     $(document).on("click", ".choices", getUserChoice);

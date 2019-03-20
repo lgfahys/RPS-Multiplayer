@@ -1,4 +1,53 @@
-.game-container {
-    border: 1px solid grey;
+body {
+    color: grey;
 }
 
+.game-container {
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #e6e8ed;
+}
+
+h1 {
+    margin-left: -17px;
+    margin-bottom: 30px;
+}
+
+#user-name {
+    margin-top: 20px;
+    font-size: large;
+    color: #3acbe8;
+}
+
+.form-group {
+    width: 300px;
+}
+
+.btn-default {
+    background-color: #3acbe8;
+    color: white;
+    position: relative;
+    left: 310px;
+    top: -37px;
+}
+
+.btn-default:hover {
+    background-color: white;
+    color: #3acbe8;
+    border: 1px solid #3acbe8;
+}
+
+.choices {
+    margin: 5px;
+    border-radius: 5px;
+    background-color: #e53063;
+    color: white;
+    border: #e53063;
+}
+
+.choices:hover {
+    cursor: pointer;
+    background-color: white;
+    color: #e53063;
+    border: 1px solid #e53063;
+}
