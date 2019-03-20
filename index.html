@@ -7,11 +7,15 @@
     <title>RPS Multiplayer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- jQuery library link -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
     <!-- Bootstrap link -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <!-- FireBase link -->
     <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase.js"></script>
+    <!-- FireChat link -->
+    <link rel="stylesheet" href="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.css" />
+    <script src="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />
     <script src="assets/javascript/app.js"></script>
 </head>
@@ -19,24 +23,32 @@
 <body>
     <div class="container header-container">
         <div class="row header">
-            <div class="col 9">
+            <div class="col 6">
                 <h1>Rock Paper Scissors</h1>
             </div>
             <div class="col 3" id="user-name">
             </div>
+            <div class="col 3" id="sign-out">
+                <button class="btn btn-default" id="sign-out" type="submit">Sign Out</button>
+            </div>
         </div>
         <div class="row header">
-            <h5>Enter your name to start the game</h5>
+            <h5>Enter your info to start the game</h5>
         </div>
     </div>
-    <div class="container form-container">
+    <div class="container form-container" id="firechat-wrapper">
         <form role="form">
             <div class="form-group row">
                 <label for="name-input">Name:</label>
-                <input class="form-control" id="name-input" type="text">
-                <button class="btn btn-default" id="add-name" type="submit">Submit</button>
+                <input class="form-control" id="name-input" type="text" placeholder="Name">
             </div>
-        </form>
+            <div class="form-group row">
+                <label for="email-input">Email:</label>
+                <input class="form-control" id="email-input" type="text" placeholder="Email">
+            </div>
+            <button class="btn btn-default" id="add-info" type="submit">Submit</button>
+    </div>
+    </form>
     </div>
     <div class="container game-container">
         <div class="row">
@@ -53,3 +65,5 @@
         </div>
     </div>
 </body>
+
+</html>

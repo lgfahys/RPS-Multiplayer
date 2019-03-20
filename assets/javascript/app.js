@@ -17,46 +17,47 @@ $(document).ready(function () {
 
     //setting global variables
 
-    // var userOne = {
+    // var playerTwo = {
     //     name: "",
+    //     email: "",
     //     wins: 0,
     //     losses: 0,
     //     choice: "",
     // }
 
-    // var userTwo = {
+    // var playerTwo = {
     //     name: "",
+    //     email: "",
     //     wins: 0,
     //     losses: 0,
     //     choice: "",
     // }
+    var numPlayers = 0;
+    var playerOne = "";
+    var playerTwo = "";
+    var name= "";
+    var email= "";
 
     var choices = ["Rock", "Paper", "Scissors"];
 
-    $("#add-name").on("click", function (event) {
+    $("#add-info").on("click", function (event) {
         event.preventDefault();
-        //making sure a blank name is not input
-        if ($("#name-input").val() !== "") {
-        //grabbing what the user input as their name
+        //making sure a blank info is not input
+        if ($("#name-input").val() && $("#email-input").val() !== "") {
+        //grabbing what the user input as their name & email
         name = $("#name-input").val().trim();
+        email = $("#email-input").val().trim();
         $("#user-name").text("Hello, " + name);
-        //set name value in database
-        database.ref().push({
-            name: name,
-        });
+        numPlayers ++;
+        console.log (numPlayers);
         } else {
-            alert ("Please input your name to begin");
+            alert ("Please input your name & e-mail to begin");
         }
     });
 
-
-    database.ref().on("value", function (snapshot) {
-        console.log(snapshot.val().name);
-
-    }, function (errorObject) {
-        console.log("Errors handled: " + errorObject.code);
+    $("#sign-out").on("click", function (event) {
+        //sign out function
     });
-
 
     function renderButtons() {
 
@@ -73,18 +74,69 @@ $(document).ready(function () {
 
     //capturing user choice by data attribute
     function getUserChoice() {
-        var userChoice = $(this).attr("data-name");
-        console.log(userChoice);
-        $("#user-one-choice").text("You chose: " + userChoice);
-        database.ref().ref({
-            userChoice: userChoice,
+        var choice = $(this).attr("data-name");
+        console.log(choice);
+        $("#user-one-choice").text("You chose: " + choice);
+        database.ref().push({
+            name: name,
+            email: email,
+            choice: choice,
         });
+    }
+
+    function pairUsers() {
+        
     }
 
     $(document).on("click", ".choices", getUserChoice);
 
+    database.ref().on("child_added", function (snapshot) {
+        console.log(snapshot.val().name);
+        console.log(snapshot.val().email);
+        console.log(snapshot.val().choice);
+        $("#user-name").text("Hello, " + snapshot.val().name);
+
+    }, function (errorObject) {
+        console.log("Errors handled: " + errorObject.code);
+    });
+
 
     renderButtons();
+
+    // function login() {
+    //     const name= $("#name-input").val();
+    //     const mail= $("#email-input").val();
+    //     const auth= firebase.auth();
+    //     const promise= auth.signInWithCustomToken(name, mail);
+    //     promise.catch(e => window.alert(e.message));
+    // }
+
+    // firebase.auth().onAuthStateChanged(function(user) {
+    //     // Once authenticated, instantiate Firechat with the logged in user
+    //     if (user) {
+    //     // window.open("chat.html");
+    //     // window.alert("logged in");
+    //     // console.log("logged in");
+    //       initChat(user);
+    //     }
+    //   });
+      
+    //   firebase.auth().signInWithCustomToken("#name-input").catch(function(error) {
+    //     console.log("Error authenticating user:", error);
+    //   });
+
+    //   function initChat(user) {
+    //     // Get a Firebase Database ref
+    //     var chatRef = firebase.database().ref("chat");
+
+    //     // Create a Firechat instance
+    //     var chat = new FirechatUI(chatRef, document.getElementById("firechat-wrapper"));
+
+    //     // Set the Firechat user
+    //     chat.setUser(user.name, user.email);
+    //   }
+
+    //   login();
 });
 
     // //when user clicks a key
