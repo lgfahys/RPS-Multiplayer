@@ -17,46 +17,44 @@ $(document).ready(function () {
 
     //setting global variables
 
-    // var playerTwo = {
-    //     name: "",
-    //     email: "",
-    //     wins: 0,
-    //     losses: 0,
-    //     choice: "",
-    // }
-
-    // var playerTwo = {
-    //     name: "",
-    //     email: "",
-    //     wins: 0,
-    //     losses: 0,
-    //     choice: "",
-    // }
     var numPlayers = 0;
     var playerOne = "";
     var playerTwo = "";
-    var name= "";
-    var email= "";
+    var name = "";
 
     var choices = ["Rock", "Paper", "Scissors"];
 
+    //hiding until user enters their information
+    function startGame() {
+        $("#sign-out").hide();
+        $("#user-one-choice").hide();
+        $("#user-two-choice").hide();
+        $("#user-choices").hide();
+        $("#opponent-choices").hide();
+        clearFirebase();
+    }
+
     $("#add-info").on("click", function (event) {
         event.preventDefault();
+        numPlayers++;
         //making sure a blank info is not input
-        if ($("#name-input").val() && $("#email-input").val() !== "") {
-        //grabbing what the user input as their name & email
-        name = $("#name-input").val().trim();
-        email = $("#email-input").val().trim();
-        $("#user-name").text("Hello, " + name);
-        numPlayers ++;
-        console.log (numPlayers);
+        if ($("#name-input").val() !== "") {
+            //grabbing what the user input as their name
+            name = $("#name-input").val().trim();
+            $("#user-name").text("Hello, " + name);
+            $("#user-input").hide();
+            $("#instructions").text("Select rock, paper or scissors");
+            $("#sign-out").show();
+            $("#user-one-choice").show();
+            $("#user-two-choice").show();
+            $("#user-choices").show();
         } else {
-            alert ("Please input your name & e-mail to begin");
+            alert("Please input your name to begin");
         }
     });
 
     $("#sign-out").on("click", function (event) {
-        //sign out function
+        startGame();
     });
 
     function renderButtons() {
@@ -64,7 +62,7 @@ $(document).ready(function () {
         //looping through the array of choices
         for (var i = 0; i < choices.length; i++) {
             //dynamically creating buttons with jquery for all choices
-            var btn = $("<button>");
+            btn = $("<button>");
             btn.addClass("choices");
             btn.attr("data-name", choices[i]);
             btn.text(choices[i]);
@@ -75,68 +73,43 @@ $(document).ready(function () {
     //capturing user choice by data attribute
     function getUserChoice() {
         var choice = $(this).attr("data-name");
-        console.log(choice);
         $("#user-one-choice").text("You chose: " + choice);
+        console.log(numPlayers);
+        if (numPlayers === 1) {
+            playerValue = 1;
+        } else {
+            playerValue = 2;
+        }
         database.ref().push({
             name: name,
-            email: email,
             choice: choice,
+            playerValue: playerValue,
         });
     }
 
     function pairUsers() {
-        
+
     }
 
     $(document).on("click", ".choices", getUserChoice);
 
     database.ref().on("child_added", function (snapshot) {
         console.log(snapshot.val().name);
-        console.log(snapshot.val().email);
         console.log(snapshot.val().choice);
+        console.log(snapshot.val().playerValue);
         $("#user-name").text("Hello, " + snapshot.val().name);
 
     }, function (errorObject) {
         console.log("Errors handled: " + errorObject.code);
     });
 
-
     renderButtons();
 
-    // function login() {
-    //     const name= $("#name-input").val();
-    //     const mail= $("#email-input").val();
-    //     const auth= firebase.auth();
-    //     const promise= auth.signInWithCustomToken(name, mail);
-    //     promise.catch(e => window.alert(e.message));
-    // }
+    // creating a function to clear the database to be used when users sign out or time out
+    function clearFirebase () {
+        database.ref().remove();
+    }
 
-    // firebase.auth().onAuthStateChanged(function(user) {
-    //     // Once authenticated, instantiate Firechat with the logged in user
-    //     if (user) {
-    //     // window.open("chat.html");
-    //     // window.alert("logged in");
-    //     // console.log("logged in");
-    //       initChat(user);
-    //     }
-    //   });
-      
-    //   firebase.auth().signInWithCustomToken("#name-input").catch(function(error) {
-    //     console.log("Error authenticating user:", error);
-    //   });
-
-    //   function initChat(user) {
-    //     // Get a Firebase Database ref
-    //     var chatRef = firebase.database().ref("chat");
-
-    //     // Create a Firechat instance
-    //     var chat = new FirechatUI(chatRef, document.getElementById("firechat-wrapper"));
-
-    //     // Set the Firechat user
-    //     chat.setUser(user.name, user.email);
-    //   }
-
-    //   login();
 });
 
     // //when user clicks a key

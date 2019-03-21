@@ -2,13 +2,23 @@ body {
     color: grey;
 }
 
-.game-container {
+#user-one-choice {
     border-radius: 10px;
     padding: 10px;
     background-color: #e6e8ed;
+    margin-left: 15px;
+    margin-right: 70px;
 }
 
-#firechat-wrapper {
+#user-two-choice {
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #e6e8ed;
+    margin-right: 15px;
+    margin-left: 70px;
+}
+
+#user-input {
     width: 300px;
     display: -webkit-inline;
 }
@@ -22,6 +32,12 @@ h1 {
     margin-top: 20px;
     font-size: large;
     color: #3acbe8;
+}
+
+#instructions {
+    font-size: large;
+    font-weight: bold;
+    margin-bottom: 30px;
 }
 
 #sign-out {
