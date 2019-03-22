@@ -26,10 +26,12 @@ $(document).ready(function () {
 
     var choices = ["Rock", "Paper", "Scissors"];
 
-    //hiding stuff on initial page load (update this to hidden only if thisPlayer does not exist)
+    //display setup on initial page load
     $("#sign-out").hide();
+    $("#instructions").text("Enter your name to begin playing");
     $("#user-one-choice").hide();
     $("#user-two-choice").hide();
+    $("#user-input").hide();
 
     // //when player submits their name
     $("#add-info").on("click", function (event) {
@@ -38,7 +40,6 @@ $(document).ready(function () {
         if (($("#name-input").val().trim() !== "")) {
             if ((playerOne === null) && (playerTwo === null)) {
                 thisPlayer = $("#name-input").val().trim();
-                $("#user-name").text("Hello, " + thisPlayer);
 
                 playerOne = {
                     name: thisPlayer,
@@ -50,10 +51,10 @@ $(document).ready(function () {
 
                 //setting player info in the database
                 database.ref().child("/players/playerOne").set(playerOne);
+
                 //if player one exists and player two does not
             } else if ((playerOne !== null) && (playerTwo === null)) {
                 thisPlayer = $("#name-input").val().trim();
-                $("#user-name").text("Hello, " + thisPlayer);
 
                 playerTwo = {
                     name: thisPlayer,
@@ -69,49 +70,146 @@ $(document).ready(function () {
         }
 
         $("#name-input").val("");
+        $("#user-input").hide();
     });
 
     database.ref("/players/").on("value", function (snapshot) {
 
-        // $("#user-name").text(snapshot.val().thisPlayer);
 
         if (snapshot.child("playerOne").exists()) {
-            playerOne = snapshot.val().playerOne;
+            var sv = snapshot.val();
+            playerOne = sv.playerOne;
             playerOneName = playerOne.name;
             console.log("Player One: " + playerOneName);
+            $("#user-input").hide();
+            $("#user-one-choice").show();
+            $("#user-two-choice").show();
+            $("#user-one-name").text("Player One: " + playerOneName);
+            //ensuring user one choice div does not repeat text when player 2 is added
+            $("#user-one-choice").empty();
             $("#user-one-choice").append(playerOneName);
-            $("#user-one-choice").append("Wins: " + playerOne.wins + "Losses " + playerOne.losses + "Tie " + playerOne.ties);
+            $("#user-one-choice").append("<br>");
+            $("#user-one-choice").append("Wins: " + playerOne.wins);
+            $("#user-one-choice").append("<br>");
+            $("#user-one-choice").append("Losses: " + playerOne.losses);
+            $("#user-one-choice").append("<br>");
+            $("#user-one-choice").append("Ties: " + playerOne.ties);
+            $("#user-one-choice").append("<br>");
         } else {
+            $("#user-input").show();
             playerOne = null;
             playerOneName = "";
             $("#instructions").text("Waiting for player 1");
         }
 
         if (snapshot.child("playerTwo").exists()) {
-            playerTwo = snapshot.val().playerTwo;
+            var sv = snapshot.val();
+            playerTwo = sv.playerTwo;
             playerTwoName = playerTwo.name;
             console.log("Player Two: " + playerTwoName);
+            $("#instructions").text("Enter your name to begin playing");
+            $("#user-input").hide();
+            $("#user-two-name").text("Player Two: " + playerTwoName);
             $("#user-two-choice").append(playerTwoName);
-            $("#user-two-choice").append("Wins: " + playerTwo.wins + "Losses " + playerTwo.losses + "Tie " + playerTwo.ties);
+            $("#user-two-choice").append("<br>");
+            $("#user-two-choice").append("Wins: " + playerTwo.wins);
+            $("#user-two-choice").append("<br>");
+            $("#user-two-choice").append("Losses: " + playerTwo.losses);
+            $("#user-two-choice").append("<br>");
+            $("#user-two-choice").append("Ties: " + playerTwo.ties);
+            $("#user-two-choice").append("<br>");
         } else {
+            $("#user-input").show();
             playerTwo = null;
             playerTwoName = "";
-            $("#instructions").text("Waiting for player 2");
+            $("#instructions").text("Enter your name to begin playing");
         }
 
         if (playerOne && playerTwo) {
-            $("#user-one-choice").css("border-color", "#ffffff", "border-weight", "1px", "border-style", "solid");
-            $("#instructions").text("Player 1's turn")
+            $("#user-one-choice").css("border", "1px solid #3acbe8");
+            $("#instructions").text("Player 1's turn");
         }
     }, function (errorObject) {
         console.log("Errors handled: " + errorObject.code);
     });
 
+    database.ref("/numTurns/").on("value", function (snapshot) {
+        if (snapshot.val() === 1) {
+            turn = 1;
+        }
+        if (playerOne && playerTwo) {
+            $("#user-one-choice").css("border", "1px solid #3acbe8");
+            $("#user-two-choice").css("border", "none");
+        } else if (snapshot.val() === 2) {
+            
+        }
+    });
+
+    //get users choice on click
+    $("#user-choices").on("click", ".choices", function(event) {
+        event.preventDefault();
+
+        if ((numTurns === 1) ) {
+            var choice = $(this).attr("data-name");
+            $("#user-one-choice").append("You chose: " + choice);
+            playerOneChoice = choice;
+            console.log("Player One Choice: " + playerOneChoice)
+            database.ref().child("/players/playerOne/choice").set(playerOne.choice);
+            numTurns = 2;
+            database.ref().child("/numTurns").set(2);
+        }
+
+    });
+
+
+    //get opponents choice on click
+    $("#opponent-choices").on("click", ".choices", function(event) {
+        event.preventDefault();
+
+        if ((numTurns === 2) ) {
+            var choice = $(this).attr("data-name");
+            $("#user-two-choice").append("You chose: " + choice);
+            playerTwoChoice = choice;
+            console.log("Player Two Choice: " + playerTwoChoice)
+            database.ref().child("/players/playerTwo/choice").set(playerTwo.choice);
+            numTurns = 1;
+            database.ref().child("/numTurns").set(1);
+            whoWins();
+        }
+
+    });
+
+    function whoWins() {
+
+    }
+
+    //creating buttons for all items in the choices array
+    function renderButtons() {
+
+        //looping through the array of choices
+        for (var i = 0; i < choices.length; i++) {
+            //dynamically creating buttons with jquery for all choices
+            btn = $("<button>");
+            btn.addClass("choices");
+            btn.attr("data-name", choices[i]);
+            btn.text(choices[i]);
+            $("#user-choices").append(btn);
+        }
+    }
+
+    // function getUserChoice() {
+    //     var choice = $(this).attr("data-name");
+    //     $("#user-one-choice").append("You chose: " + choice);
+    // }
+
+    // $(document).on("click", ".choices", getUserChoice);
 
     //clearing the database when a user signs out
     $("#sign-out").on("click", function (event) {
         database.ref().remove(thisPlayer);
     });
+
+    renderButtons();
 
 
 });

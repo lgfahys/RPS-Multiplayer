@@ -28,7 +28,13 @@ h1 {
     margin-bottom: 30px;
 }
 
-#user-name {
+#user-one-name {
+    margin-top: 20px;
+    font-size: large;
+    color: #3acbe8;
+}
+
+#user-two-name {
     margin-top: 20px;
     font-size: large;
     color: #3acbe8;
