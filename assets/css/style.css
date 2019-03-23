@@ -2,7 +2,7 @@ body {
     color: grey;
 }
 
-#user-one-choice {
+#user-one-div {
     border-radius: 10px;
     padding: 10px;
     background-color: #e6e8ed;
@@ -10,7 +10,7 @@ body {
     margin-right: 70px;
 }
 
-#user-two-choice {
+#user-two-div {
     border-radius: 10px;
     padding: 10px;
     background-color: #e6e8ed;
