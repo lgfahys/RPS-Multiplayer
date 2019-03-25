@@ -70,6 +70,8 @@ h1 {
     background-color: #e53063;
     color: white;
     border: #e53063;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .choices:hover {

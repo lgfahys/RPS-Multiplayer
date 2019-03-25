@@ -99,6 +99,8 @@ $(document).ready(function () {
             $("#user-one-div").append("<br>");
             $("#user-one-div").append("Ties: " + playerOne.ties);
             $("#user-one-div").append("<br>");
+            $("#user-one-div").append("Choice: " + playerOne.choice);
+            $("#user-one-div").append("<br>");
         } else {
             $("#user-input").show();
             playerOne = null;
@@ -126,6 +128,8 @@ $(document).ready(function () {
             $("#user-two-div").append("Losses: " + playerTwo.losses);
             $("#user-two-div").append("<br>");
             $("#user-two-div").append("Ties: " + playerTwo.ties);
+            $("#user-two-div").append("<br>");
+            $("#user-two-div").append("Choice: " + playerTwo.choice);
             $("#user-two-div").append("<br>");
         } else {
             $("#user-input").show();
@@ -204,19 +208,61 @@ $(document).ready(function () {
         }
 
     });
-  
-    function whoWins() {
-        //determining if there is a tie & if so, keeping track in the db & displaying in user divs
-        if ((playerOne.choice) === (playerTwo.choice)) {
 
+    function whoWins() {
+        //determining if there is a tie, win or loss keeping track in the db & displaying in user divs
+        if ((playerOne.choice) === "Rock") {
+            if ((playerTwo.choice) === "Rock") {
                 database.ref().child("players/playerOne/ties").set(playerOne.ties + 1);
                 database.ref().child("players/playerTwo/ties").set(playerTwo.ties + 1);
-                $("#instructions").append("It's a tie!");
+                $("#who-won").append("It's a tie!");
+            } else if ((playerTwo.choice) === "Paper") {
+                database.ref().child("players/playerOne/losses").set(playerOne.losses + 1);
+                database.ref().child("players/playerTwo/wins").set(playerTwo.wins + 1);
+                $("#who-won").append("Paper beats rock!")
+            } else if ((playerTwo.choice) === "Scissors") {
+                database.ref().child("players/playerOne/wins").set(playerOne.wins + 1);
+                database.ref().child("players/playerTwo/losses").set(playerTwo.losses + 1);
+                $("#who-won").append("Rock beats scissors!")
+            }
+
+        } else if ((playerOne.choice) === "Paper") {
+
+            if ((playerTwo.choice) === "Rock") {
+                database.ref().child("players/playerOne/wins").set(playerOne.wins + 1);
+                database.ref().child("players/playerTwo/losses").set(playerTwo.losses + 1);
+                $("#who-won").append("Paper beats rock!");
+            } else if ((playerTwo.choice) === "Paper") {
+                database.ref().child("players/playerOne/ties").set(playerOne.ties + 1);
+                database.ref().child("players/playerTwo/ties").set(playerTwo.ties + 1);
+                $("#who-won").append("It's a tie!")
+            } else if ((playerTwo.choice) === "Scissors") {
+                database.ref().child("players/playerOne/losses").set(playerOne.losses + 1);
+                database.ref().child("players/playerTwo/wins").set(playerTwo.wins + 1);
+                $("#who-won").append("Scissors beats paper!")
+            }
+
+        } else if ((playerOne.choice) === "Scissors") {
+
+            if ((playerTwo.choice) === "Rock") {
+                database.ref().child("players/playerOne/losses").set(playerOne.losses + 1);
+                database.ref().child("players/playerTwo/wins").set(playerTwo.wins + 1);
+                $("#who-won").append("Rock beats scissors!");
+            } else if ((playerTwo.choice) === "Paper") {
+                database.ref().child("players/playerOne/wins").set(playerOne.wins + 1);
+                database.ref().child("players/playerTwo/losses").set(playerTwo.losses + 1);
+                $("#who-won").append("Scissors beats paper!")
+            } else if ((playerTwo.choice) === "Scissors") {
+                database.ref().child("players/playerOne/ties").set(playerOne.ties + 1);
+                database.ref().child("players/playerTwo/ties").set(playerTwo.ties + 1);
+                $("#who-won").append("It's a tie!");
+            }
+
         }
 
     };
 
-        // $(document).keyup(function () {
+    // $(document).keyup(function () {
 
     //     // if (((userOneGuess === "r") || (userOneGuess === "p") || (userOneGuess === "s"))
     //     //     && ((userTwoGuess === "r") || (userTwoGuess === "p") || (userTwoGuess === "s"))) {
