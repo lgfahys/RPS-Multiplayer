@@ -70,13 +70,12 @@ $(document).ready(function () {
                 database.ref().child("/players/playerTwo").set(playerTwo);
             }
         }
-
+        //clearing name input after user hits enter and hiding user input so they can't enter name again
         $("#name-input").val("");
         $("#user-input").hide();
     });
 
     database.ref("/players/").on("value", function (snapshot) {
-
 
         if (snapshot.child("playerOne").exists()) {
             var sv = snapshot.val();
@@ -87,6 +86,7 @@ $(document).ready(function () {
             $("#user-input").hide();
             $("#user-one-div").show();
             $("#user-two-div").show();
+            $("#sign-out").show();
             $("#user-one-name").text("Player One: " + playerOneName);
             //ensuring user one choice div does not repeat text when player 2 is added
             $("#user-one-div").empty();
@@ -113,6 +113,8 @@ $(document).ready(function () {
             console.log("Player Two: " + playerTwoName);
             $("#instructions").text("Player One's turn");
             $("#user-input").hide();
+            $("#user-choices").show();
+            // $("#opponent-choices").hide();
             $("#user-two-name").text("Player Two: " + playerTwoName);
             //ensuring user one choice div does not repeat text when player 2 is added
             $("#user-two-div").empty();
@@ -179,6 +181,7 @@ $(document).ready(function () {
             console.log(numTurns);
             //setting numTurns to 2 in the db
             database.ref().child("/numTurns").set(2);
+            whoWins();
         }
 
     });
@@ -201,10 +204,35 @@ $(document).ready(function () {
         }
 
     });
-
+  
     function whoWins() {
+        //determining if there is a tie & if so, keeping track in the db & displaying in user divs
+        if ((playerOne.choice) === (playerTwo.choice)) {
 
-    }
+                database.ref().child("players/playerOne/ties").set(playerOne.ties + 1);
+                database.ref().child("players/playerTwo/ties").set(playerTwo.ties + 1);
+                $("#instructions").append("It's a tie!");
+        }
+
+    };
+
+        // $(document).keyup(function () {
+
+    //     // if (((userOneGuess === "r") || (userOneGuess === "p") || (userOneGuess === "s"))
+    //     //     && ((userTwoGuess === "r") || (userTwoGuess === "p") || (userTwoGuess === "s"))) {
+
+    //     //     if ((userOneGuess === "r" && userTwoGuess === "s") ||
+    //     //         (userOneGuess === "s" && userTwoGuess === "p") ||
+    //     //         (userOneGuess === "p" && userTwoGuess === "r")) {
+    //     //         userOne.wins++ && userTwo.losses--;
+    //     //     } else if (userOneGuess === userTwoGuess) {
+    //     //         userOne.ties++ && userTwo.ties++;
+    //     //     } else {
+    //     //         userOne.losses++ && userTwo.wins++;
+    //     //     }
+    //     // }
+
+    // });
 
     //creating buttons for all items in the choices array
     function renderButtons() {
@@ -230,51 +258,6 @@ $(document).ready(function () {
 
 });
 
-    // //when user clicks a key
-    // $(document).keyup(function () {
-
-    //     // if (((userOneGuess === "r") || (userOneGuess === "p") || (userOneGuess === "s"))
-    //     //     && ((userTwoGuess === "r") || (userTwoGuess === "p") || (userTwoGuess === "s"))) {
-
-    //     //     if ((userOneGuess === "r" && userTwoGuess === "s") ||
-    //     //         (userOneGuess === "s" && userTwoGuess === "p") ||
-    //     //         (userOneGuess === "p" && userTwoGuess === "r")) {
-    //     //         userOne.wins++ && userTwo.losses--;
-    //     //     } else if (userOneGuess === userTwoGuess) {
-    //     //         userOne.ties++ && userTwo.ties++;
-    //     //     } else {
-    //     //         userOne.losses++ && userTwo.wins++;
-    //     //     }
-    //     // }
-
-    // });
-
-
-        // $("#sign-out").on("click", function (event) {
-        //     startGame();
-        // });
-
-        // function renderButtons() {
-
-        //     //looping through the array of choices
-        //     for (var i = 0; i < choices.length; i++) {
-        //         //dynamically creating buttons with jquery for all choices
-        //         btn = $("<button>");
-        //         btn.addClass("choices");
-        //         btn.attr("data-name", choices[i]);
-        //         btn.text(choices[i]);
-        //         $("#user-choices").append(btn);
-        //     }
-        // }
-
-        // //capturing user choice by data attribute
-        // function getUserChoice() {
-        //     var choice = $(this).attr("data-name");
-        //     $("#user-one-choice").append("You chose: " + choice);
-        // }
-
-        // //getting user choice on choice button click
-        // $(document).on("click", ".choices", getUserChoice);
 
         // // creating a function to clear the database to be used when users sign out or time out
         // function clearFirebase () {
